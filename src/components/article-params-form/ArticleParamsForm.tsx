@@ -1,8 +1,8 @@
 import { useOutsideClickClose } from '@/ui/select/hooks/useOutsideClickClose'; // кастомный хук для закрытия сайдбара вне окна
-import { clsx } from 'clsx'; // ипорт clsx для объединения классов
-import { useState, type FormEvent, useRef } from 'react'; // импорт хук
+import { clsx } from 'clsx'; // импорт clsx для объединения классов
+import { useState, type FormEvent, useRef } from 'react'; // импорт хуков
 import {
-  // импорт данные для списков и дефолтное состояние
+  // импорт данных для списков и дефолтное состояние
   fontFamilyOptions,
   fontColors,
   backgroundColors,
@@ -15,7 +15,7 @@ import {
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
 import { RadioGroup } from 'src/ui/radio-group';
-// импорт ui-компоненты
+// импорт ui-компонентов
 import { Select } from 'src/ui/select';
 import { Separator } from 'src/ui/separator';
 import { Text } from 'src/ui/text'; // импорт текста
@@ -29,7 +29,7 @@ type ArticleParamsFormProps = {
 export const ArticleParamsForm = ({
   onApply, // применяем проп
 }: ArticleParamsFormProps): React.JSX.Element => {
-  const [isOpen, setIsOpen] = useState(false); // сайд бар закрываем по уполчанию(делаем элементы "умными")
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // сайд бар закрываем по умолчанию(делаем элементы "умными")
 
   const [formState, setFormState] = useState<ArticleStateType>(defaultArticleState); // стейт равен дефолтному состоянию
 
@@ -44,14 +44,14 @@ export const ArticleParamsForm = ({
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   useOutsideClickClose({
-    isOpen,
+    isOpen: isSidebarOpen,
     rootRef: sidebarRef,
-    onChange: setIsOpen,
+    onChange: setIsSidebarOpen,
   });
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
-    // обработчик отправк формы
-    event.preventDefault(); // останавливаем стандартное поведение страницы и ее перезакрузку
+    // обработчик отправки формы
+    event.preventDefault(); // останавливаем стандартное поведение страницы и ее перезагрузку
     onApply(formState); // применяем настройки к статье
   };
 
@@ -63,10 +63,14 @@ export const ArticleParamsForm = ({
 
   return (
     <div ref={sidebarRef}>
-      <ArrowButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />{' '}
+      <ArrowButton
+        isOpen={isSidebarOpen}
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      />
       {/* кидаем в isOpen в стрелку и переключаем состояние по клику */}
-      <aside className={clsx(styles.container, { [styles.container_open]: isOpen })}>
-        {' '}
+      <aside
+        className={clsx(styles.container, { [styles.container_open]: isSidebarOpen })}
+      >
         {/* добавляем класс */}
         <form className={styles.form} onSubmit={handleSubmit} onReset={handleReset}>
           <Text size={31} weight={800} uppercase>
